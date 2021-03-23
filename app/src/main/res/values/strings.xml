@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Crystal Fashion</string>
+    <string name="facebook_app_id">2092808561018631</string>
+    <string name="fb_login_protocol_scheme">fb2092808561018631</string>
+    <string name="server_client_id">991272760197-lkfha8k13beba94ttd7o0l98ket8p2sg.apps.googleusercontent.com</string>
+    <string name="default_web_client_id">589990391533-cere88f1npdoft67d8cofloeur3e31a4.apps.googleusercontent.com</string>
 </resources>
