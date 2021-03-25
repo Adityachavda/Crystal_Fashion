@@ -5,28 +5,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.crystalfashion.HomePage.HomePage;
 import com.example.crystalfashion.R;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.Identity;
-import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,7 +34,6 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Login extends AppCompatActivity {
@@ -50,7 +44,6 @@ public class Login extends AppCompatActivity {
 
     /* Create variables for Google Login:- */
     private GoogleSignInClient mGoogleSignInClient;
-    private Button google_signout;
 
     /* On Create Method OF this Activity:- */
     @Override
@@ -59,7 +52,6 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         /* Reference our Variable with Out Design Elements By IDs. */
         facebookloginButton = findViewById(R.id.Facebook_btn);
-        google_signout=findViewById(R.id.Google_signout);
 
 
         /*Google Sign in Process Starts From This Line:- */
@@ -82,13 +74,6 @@ public class Login extends AppCompatActivity {
         });
 
 
-        google_signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signout_google();
-            }
-        });
-
 
 
         /*Facebook Sign in Process Starts Form This Line:- */
@@ -101,6 +86,11 @@ public class Login extends AppCompatActivity {
         facebookloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
+                /*Goto HomePage*/
+                Intent intentf = new Intent(Login.this, HomePage.class);
+                startActivity(intentf);
+                /*Get user Information From FaceBook*/
                 getFaceInfo();
 
             }
@@ -135,8 +125,6 @@ public class Login extends AppCompatActivity {
                             Log.d("LOG_TAG", "fb json object: " + object);
                             Log.d("LOG_TAG", "fb graph response: " + response);
 
-                            Toast.makeText(Login.this, "Id:- " + object.getString("id") + " Name:- " + object.getString("first_name"), Toast.LENGTH_SHORT).show();
-
                             String id = object.getString("id");
                             String first_name = object.getString("first_name");
                             String last_name = object.getString("last_name");
@@ -159,21 +147,18 @@ public class Login extends AppCompatActivity {
         request.executeAsync();
     }
 
-    /* signout_google() is a Method From Which We can Trigger Google SignOut:- */
 
-    private void signout_google() {
-        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(Login.this, "Signed Out", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    
     /* This is onStart Activity, Always Run First When Our Activity is About to Start:- */
     /* we can check here that user signed in or not:- */
     @Override
     protected void onStart() {
+
+        if(AccessToken.getCurrentAccessToken()!=null){
+            /*Goto HomePage*/
+            Intent intent = new Intent(Login.this, HomePage.class);
+            startActivity(intent);
+        }
+
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
 //            String personName = acct.getDisplayName();
@@ -182,10 +167,10 @@ public class Login extends AppCompatActivity {
 //            String personEmail = acct.getEmail();
 //            String personId = acct.getId();
 //            Uri personPhoto = acct.getPhotoUrl();
-            Toast.makeText(this, "Signed In", Toast.LENGTH_SHORT).show();
-        }else
-        {
-            Toast.makeText(this, "Not Signed In", Toast.LENGTH_SHORT).show();
+            /*Goto HomePage*/
+            Intent intent = new Intent(Login.this, HomePage.class);
+            startActivity(intent);
+        } else {
         }
         super.onStart();
     }
@@ -206,8 +191,9 @@ public class Login extends AppCompatActivity {
     private void handleSignInResults(Task<GoogleSignInAccount> task) {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
-            // Signed in successfully, show authenticated UI.
-            Toast.makeText(this, "Signed In Approved", Toast.LENGTH_SHORT).show();
+            /*Goto HomePage After Sign In in Google*/
+            Intent intent = new Intent(Login.this, HomePage.class);
+            startActivity(intent);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
