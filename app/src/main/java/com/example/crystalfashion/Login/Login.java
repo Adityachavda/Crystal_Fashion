@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.crystalfashion.HomePage.HomePage;
 import com.example.crystalfashion.R;
+import com.example.crystalfashion.Register.Register;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -41,6 +43,7 @@ public class Login extends AppCompatActivity {
     /* Create Variables For Facebook Login:- */
     private LoginButton facebookloginButton;
     private CallbackManager callbackManager;
+    TextView Account_Signup_TextView;
 
     /* Create variables for Google Login:- */
     private GoogleSignInClient mGoogleSignInClient;
@@ -50,12 +53,23 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        /* Reference our Variable with Out Design Elements By IDs. */
+        /* Reference our Variable with Our Design Elements By IDs. */
+        Account_Signup_TextView = findViewById(R.id.Account_sign_up_text_view);
         facebookloginButton = findViewById(R.id.Facebook_btn);
 
 
-        /*Google Sign in Process Starts From This Line:- */
 
+        /*Goto Homepage If user Click On Sign Up TextView:- */
+        Account_Signup_TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent GotoRegister = new Intent(Login.this, Register.class);
+                startActivity(GotoRegister);
+            }
+        });
+
+
+        /*Google Sign in Process Starts From This Line:- */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -77,9 +91,7 @@ public class Login extends AppCompatActivity {
 
 
         /*Facebook Sign in Process Starts Form This Line:- */
-
         callbackManager = CallbackManager.Factory.create();
-
         facebookloginButton.setPermissions(Arrays.asList("email"));
 
         /*This method Handels The Things when we start processing facebook Signin :- */
@@ -88,8 +100,8 @@ public class Login extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
 
                 /*Goto HomePage*/
-                Intent intentf = new Intent(Login.this, HomePage.class);
-                startActivity(intentf);
+                Intent GotoHomePage = new Intent(Login.this, HomePage.class);
+                startActivity(GotoHomePage);
                 /*Get user Information From FaceBook*/
                 getFaceInfo();
 
@@ -155,8 +167,8 @@ public class Login extends AppCompatActivity {
 
         if(AccessToken.getCurrentAccessToken()!=null){
             /*Goto HomePage*/
-            Intent intent = new Intent(Login.this, HomePage.class);
-            startActivity(intent);
+            Intent GoToHomePage = new Intent(Login.this, HomePage.class);
+            startActivity(GoToHomePage);
         }
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -168,8 +180,8 @@ public class Login extends AppCompatActivity {
 //            String personId = acct.getId();
 //            Uri personPhoto = acct.getPhotoUrl();
             /*Goto HomePage*/
-            Intent intent = new Intent(Login.this, HomePage.class);
-            startActivity(intent);
+            Intent GoToHomePage = new Intent(Login.this, HomePage.class);
+            startActivity(GoToHomePage);
         } else {
         }
         super.onStart();
@@ -192,8 +204,8 @@ public class Login extends AppCompatActivity {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             /*Goto HomePage After Sign In in Google*/
-            Intent intent = new Intent(Login.this, HomePage.class);
-            startActivity(intent);
+            Intent GoToHomePage = new Intent(Login.this, HomePage.class);
+            startActivity(GoToHomePage);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

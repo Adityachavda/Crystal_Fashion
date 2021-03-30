@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API_Client {
 
-    public static final String BASE_URL = "";
+    public static final String BASE_URL = "https://incomparable-vector.000webhostapp.com/Crystal_Fashion/";
     private static Retrofit retrofit;
     public static API_Client mInstance;
 
