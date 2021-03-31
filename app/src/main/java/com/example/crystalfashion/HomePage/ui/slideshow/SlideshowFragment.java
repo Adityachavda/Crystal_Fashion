@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.crystalfashion.Login.Login;
 import com.example.crystalfashion.R;
+import com.example.crystalfashion.Storage.SharedPrefManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -32,7 +33,7 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 LoginManager.getInstance().logOut();
-
+                SharedPrefManager.getInstance(getActivity()).clearUser();
                 try{
                     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                             .requestEmail()

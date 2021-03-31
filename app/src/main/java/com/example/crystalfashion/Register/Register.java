@@ -41,12 +41,10 @@ public class Register extends AppCompatActivity {
     Bitmap bitmap;
     EditText username_editText, email_editText, password_editText, confirm_password_editText, height_editText, weight_editText;
     RadioGroup skin_color_radio_group, body_type_radio_group;
-    RadioButton radioButton;
-    RadioButton radioButton1;
     int PICK_IMAGE = 200;
     int flag = 1;
-    String skin_color;
-    String body_type;
+    String skin_color="";
+    String body_type="";
 
 
     @Override
@@ -56,17 +54,26 @@ public class Register extends AppCompatActivity {
 
         image_select_button = findViewById(R.id.button_select_image);
         imageView = (ImageView) findViewById(R.id.img_ss);
-
         register = findViewById(R.id.Register_user_button);
-
         username_editText = findViewById(R.id.text_input_username_edit_text);
         email_editText = findViewById(R.id.text_input_email_edit_text);
         password_editText = findViewById(R.id.text_input_password_edit_text);
         confirm_password_editText = findViewById(R.id.conpasswordtext_input_password_edit_text);
         height_editText = findViewById(R.id.height_input_edit_text);
         weight_editText = findViewById(R.id.Weight_input_edit_text);
-        skin_color_radio_group = findViewById(R.id.radiogroup_skin_color1);
-        body_type_radio_group = findViewById(R.id.bodytype_radiogroup);
+        skin_color_radio_group = findViewById(R.id.radiogroup1);
+        body_type_radio_group = findViewById(R.id.radiogroup2);
+
+
+        skin_color_radio_group.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton radioButton = findViewById(checkedId);
+            skin_color = radioButton.getText().toString();
+        });
+
+        body_type_radio_group.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton radioButton = findViewById(checkedId);
+            body_type = radioButton.getText().toString();
+        });
 
 
         image_select_button.setOnClickListener(new View.OnClickListener() {
@@ -117,21 +124,6 @@ public class Register extends AppCompatActivity {
 
         Image = ImageToString();
 
-        skin_color_radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                radioButton = findViewById(checkedId);
-                skin_color = radioButton.getText().toString();
-            }
-        });
-
-        body_type_radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                radioButton1 = findViewById(checkedId);
-                body_type = radioButton1.getText().toString();
-            }
-        });
 
 
         if (Image.isEmpty()) {
@@ -177,37 +169,42 @@ public class Register extends AppCompatActivity {
         } else if (body_type_radio_group.getCheckedRadioButtonId() == -1) {
             Toast.makeText(this, "Select Body Type", Toast.LENGTH_SHORT).show();
         } else {
-            Log.d("Image", Image);
-            Log.d("username", username);
-            Log.d("email", email);
-            Log.d("password", password);
-            Log.d("Skin Tone", skin_color);
-            Log.d("Height", height);
-            Log.d("Weight", weight);
-            Log.d("Body Type", body_type);
+
+            try {
+                Log.d("Image", Image);
+                Log.d("username", username);
+                Log.d("email", email);
+                Log.d("password", password);
+                Log.d("Skin Tone", skin_color);
+                Log.d("Height", height);
+                Log.d("Weight", weight);
+                Log.d("Body Type", body_type);
 
 
-            ProgressDialog progressDialog = new ProgressDialog(Register.this);
-            progressDialog.setMessage("Please Wait");
-            progressDialog.show();
-            Call<Default_Response> defaultResponseCall = API_Client.getInstance().getApi().createUser(Image, username, email, password, skin_color, Double.parseDouble(height), Double.parseDouble(weight), body_type);
-            defaultResponseCall.enqueue(new Callback<Default_Response>() {
-                @Override
-                public void onResponse(Call<Default_Response> call, Response<Default_Response> response) {
-                    Default_Response defaultResponse = response.body();
-                    Toast.makeText(Register.this, defaultResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                    Intent GotoLogin = new Intent(Register.this, Login.class);
-                    startActivity(GotoLogin);
-                }
+                ProgressDialog progressDialog = new ProgressDialog(Register.this);
+                progressDialog.setMessage("Please Wait..");
+                progressDialog.show();
+                Call<Default_Response> defaultResponseCall = API_Client.getInstance().getApi().createUser(Image, username, email, password, skin_color, Float.parseFloat(height), Float.parseFloat(weight), body_type);
+                defaultResponseCall.enqueue(new Callback<Default_Response>() {
+                    @Override
+                    public void onResponse(Call<Default_Response> call, Response<Default_Response> response) {
+                        Default_Response defaultResponse = response.body();
+                        Toast.makeText(Register.this, defaultResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        Intent GotoLogin = new Intent(Register.this, Login.class);
+                        startActivity(GotoLogin);
+                    }
 
-                @Override
-                public void onFailure(Call<Default_Response> call, Throwable t) {
-                    Toast.makeText(Register.this, "Unable To Create User", Toast.LENGTH_SHORT).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Default_Response> call, Throwable t) {
+                        Toast.makeText(Register.this, "Unable To Create User", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-
+            }
+            catch (Exception e){
+                Log.d("Error", String.valueOf(e));
+            }
         }
 
     }

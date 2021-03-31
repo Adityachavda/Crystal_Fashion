@@ -3,18 +3,27 @@ package com.example.crystalfashion.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.crystalfashion.API_Client.API_Client;
 import com.example.crystalfashion.HomePage.HomePage;
+import com.example.crystalfashion.Models.LoginResponse;
 import com.example.crystalfashion.R;
 import com.example.crystalfashion.Register.Register;
+import com.example.crystalfashion.Storage.SharedPrefManager;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -37,13 +46,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Login extends AppCompatActivity {
 
     /* Create Variables For Facebook Login:- */
     private LoginButton facebookloginButton;
     private CallbackManager callbackManager;
-    TextView Account_Signup_TextView;
+    TextView Account_Signup_TextView,Forgot_password_TextView;
+    Button Login_Button;
+    EditText email_editEditText,password_EditText;
+    FragmentManager fragmentManager;
+    forgot_password forgot_password_fragment;
+    FragmentTransaction fragmentTransaction;
 
     /* Create variables for Google Login:- */
     private GoogleSignInClient mGoogleSignInClient;
@@ -54,9 +74,33 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         /* Reference our Variable with Our Design Elements By IDs. */
+        Login_Button=findViewById(R.id.Login_btn);
+        email_editEditText=findViewById(R.id.text_input_username_email_edit_text_login);
+        password_EditText=findViewById(R.id.text_input_password_edit_text_login);
+
         Account_Signup_TextView = findViewById(R.id.Account_sign_up_text_view);
+        Forgot_password_TextView = findViewById(R.id.forgot_password_text_view);
         facebookloginButton = findViewById(R.id.Facebook_btn);
 
+
+        Forgot_password_TextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager=getSupportFragmentManager();
+                forgot_password_fragment=new forgot_password();
+                fragmentTransaction=fragmentManager.beginTransaction();
+                fragmentTransaction.add(R.id.fragment_container,forgot_password_fragment,"Forgot Password");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        Login_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Loginuser();
+            }
+        });
 
 
         /*Goto Homepage If user Click On Sign Up TextView:- */
@@ -124,6 +168,51 @@ public class Login extends AppCompatActivity {
     /*Here You can define Methods and functions:- :) */
 
 
+
+    private void Loginuser(){
+        String email = email_editEditText.getText().toString().trim();
+        String password = password_EditText.getText().toString().trim();
+
+        if(email.isEmpty()){
+            email_editEditText.setError("Enter Your Email");
+            email_editEditText.requestFocus();
+            return;
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            email_editEditText.setError("Enter Valid Email");
+            email_editEditText.requestFocus();
+            return;
+        }else if(password.isEmpty()){
+            password_EditText.setError("Enter Your Password");
+            password_EditText.requestFocus();
+            return;
+        }
+        else{
+            ProgressDialog progressDialog=new ProgressDialog(Login.this);
+            progressDialog.setMessage("Please Wait..");
+            progressDialog.show();
+            Call<LoginResponse> loginResponseCall= API_Client.getInstance().getApi().loginUser("login",email,password);
+            loginResponseCall.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    LoginResponse loginResponse=response.body();
+                    Toast.makeText(Login.this, "Welcome :- "+loginResponse.user.username, Toast.LENGTH_SHORT).show();
+
+                    SharedPrefManager.getInstance(Login.this).saveUser(loginResponse.user);
+
+                    progressDialog.dismiss();
+                    Intent GotoHomePage = new Intent(Login.this,HomePage.class);
+                    startActivity(GotoHomePage);
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Toast.makeText(Login.this, "Welcome :- "+"Unable To Sign In", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            });
+        }
+    }
+
     /* getFaceInfo() is a Method From which we can get Information About Logged in User. Like id,firstname, lastname etc... */
     private void getFaceInfo() {
         GraphRequest request = GraphRequest.newMeRequest(
@@ -164,6 +253,11 @@ public class Login extends AppCompatActivity {
     /* we can check here that user signed in or not:- */
     @Override
     protected void onStart() {
+
+        if(SharedPrefManager.getInstance(Login.this).isLoggedIn()){
+            Intent GoToHomePage = new Intent(Login.this, HomePage.class);
+            startActivity(GoToHomePage);
+        }
 
         if(AccessToken.getCurrentAccessToken()!=null){
             /*Goto HomePage*/

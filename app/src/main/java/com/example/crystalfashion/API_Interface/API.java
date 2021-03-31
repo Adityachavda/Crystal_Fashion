@@ -1,6 +1,7 @@
 package com.example.crystalfashion.API_Interface;
 
 import com.example.crystalfashion.Models.Default_Response;
+import com.example.crystalfashion.Models.LoginResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -17,9 +18,24 @@ public interface API {
             @Field("email") String email,
             @Field("password") String password,
             @Field("skin_tone") String skin_tone,
-            @Field("height") Double height,
-            @Field("weight") Double weight,
+            @Field("height") Float height,
+            @Field("weight") Float weight,
             @Field("body_type") String body_type
+    );
+
+    @FormUrlEncoded
+    @POST("user_login.php")
+    Call<LoginResponse> loginUser(
+            @Field("opr") String opr,
+            @Field("email") String email,
+            @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @POST("user_login.php")
+    Call<Default_Response> forgot_password(
+            @Field("opr") String opr,
+            @Field("email") String email
     );
 
 }
