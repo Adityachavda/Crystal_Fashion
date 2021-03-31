@@ -196,13 +196,19 @@ public class Login extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     LoginResponse loginResponse=response.body();
-                    Toast.makeText(Login.this, "Welcome :- "+loginResponse.user.username, Toast.LENGTH_SHORT).show();
 
-                    SharedPrefManager.getInstance(Login.this).saveUser(loginResponse.user);
+                    if(loginResponse.status==201){
+                        Toast.makeText(Login.this, "Incorrect Email Or Password", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }else {
+                        Toast.makeText(Login.this, "Welcome :- "+loginResponse.user.username, Toast.LENGTH_SHORT).show();
 
-                    progressDialog.dismiss();
-                    Intent GotoHomePage = new Intent(Login.this,HomePage.class);
-                    startActivity(GotoHomePage);
+                        SharedPrefManager.getInstance(Login.this).saveUser(loginResponse.user);
+
+                        progressDialog.dismiss();
+                        Intent GotoHomePage = new Intent(Login.this,HomePage.class);
+                        startActivity(GotoHomePage);
+                    }
                 }
 
                 @Override
