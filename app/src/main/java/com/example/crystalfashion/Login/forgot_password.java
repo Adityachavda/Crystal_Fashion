@@ -1,6 +1,7 @@
 package com.example.crystalfashion.Login;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -66,6 +67,7 @@ public class forgot_password extends Fragment {
         else{
             ProgressDialog progressDialog=new ProgressDialog(getActivity());
             progressDialog.setMessage("Please Wait..");
+            progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
             Call<Default_Response> default_responseCall= API_Client.getInstance().getApi().forgot_password("sendEmail",email);
             default_responseCall.enqueue(new Callback<Default_Response>() {
@@ -78,6 +80,8 @@ public class forgot_password extends Fragment {
                     }else{
                         Toast.makeText(getActivity(), defaultResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                        Intent GotoLoginPage=new Intent(getActivity(),Login.class);
+                        startActivity(GotoLoginPage);
                     }
                 }
 

@@ -183,6 +183,7 @@ public class Register extends AppCompatActivity {
 
                 ProgressDialog progressDialog = new ProgressDialog(Register.this);
                 progressDialog.setMessage("Please Wait..");
+                progressDialog.setCanceledOnTouchOutside(false);
                 progressDialog.show();
                 Call<Default_Response> defaultResponseCall = API_Client.getInstance().getApi().createUser(Image, username, email, password, skin_color, Float.parseFloat(height), Float.parseFloat(weight), body_type);
                 defaultResponseCall.enqueue(new Callback<Default_Response>() {

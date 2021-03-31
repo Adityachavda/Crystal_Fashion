@@ -189,6 +189,7 @@ public class Login extends AppCompatActivity {
         else{
             ProgressDialog progressDialog=new ProgressDialog(Login.this);
             progressDialog.setMessage("Please Wait..");
+            progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
             Call<LoginResponse> loginResponseCall= API_Client.getInstance().getApi().loginUser("login",email,password);
             loginResponseCall.enqueue(new Callback<LoginResponse>() {
