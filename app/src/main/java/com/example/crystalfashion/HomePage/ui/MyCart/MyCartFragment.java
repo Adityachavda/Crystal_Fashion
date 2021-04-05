@@ -1,4 +1,4 @@
-package com.example.crystalfashion.HomePage.ui.gallery;
+package com.example.crystalfashion.HomePage.ui.MyCart;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,17 +15,17 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.crystalfashion.R;
 
 
-public class GalleryFragment extends Fragment {
+public class MyCartFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private MyCartViewModel myCartViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                new ViewModelProvider(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        myCartViewModel =
+                new ViewModelProvider(this).get(MyCartViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_mycart, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        myCartViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
