@@ -5,8 +5,21 @@
     android:background="#1733B5">
 
     <ImageView
+        android:id="@+id/Logo"
         android:layout_marginTop="@dimen/_40sdp"
         android:layout_width="@dimen/_60sdp"
         android:layout_height="@dimen/_60sdp"
         android:src="@drawable/logo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_35sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_toEndOf="@id/Logo"
+        android:fontFamily="@font/bungee_inline"
+        android:text="Crystal Fashion"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20sdp" />
+
 </RelativeLayout>

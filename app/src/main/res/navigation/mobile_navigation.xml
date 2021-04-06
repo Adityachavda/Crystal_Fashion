@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.crystalfashion.HomePage.ui.MyCart.MyCartFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_mycart" />
+        android:name="com.example.crystalfashion.HomePage.ui.MyWishList.MyWishlistFragment"
+        android:label="My Wishlist"
+        tools:layout="@layout/fragment_mywishlist" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="com.example.crystalfashion.HomePage.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:name="com.example.crystalfashion.HomePage.ui.Settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

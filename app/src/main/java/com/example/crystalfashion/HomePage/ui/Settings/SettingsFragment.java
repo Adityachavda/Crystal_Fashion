@@ -1,4 +1,4 @@
-package com.example.crystalfashion.HomePage.ui.slideshow;
+package com.example.crystalfashion.HomePage.ui.Settings;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,13 +21,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 
-public class SlideshowFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     private Button SignOutAll;
     GoogleSignInClient googleSignInClient;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
+        View root = inflater.inflate(R.layout.fragment_settings, container, false);
         SignOutAll = root.findViewById(R.id.SignOutAll_Button);
         SignOutAll.setOnClickListener(new View.OnClickListener() {
             @Override

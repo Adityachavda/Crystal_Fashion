@@ -3,6 +3,7 @@ package com.example.crystalfashion.API_Interface;
 import com.example.crystalfashion.Models.Default_Response;
 import com.example.crystalfashion.Models.LoginResponse;
 import com.example.crystalfashion.Models.ProductResponse;
+import com.example.crystalfashion.Models.WishListResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -43,6 +44,45 @@ public interface API {
     @POST("select_product.php")
     Call<ProductResponse> get_products(
             @Field("opr") String opr
+    );
+
+    @FormUrlEncoded
+    @POST("addWish.php")
+    Call<Default_Response> add_wish(
+            @Field("opr") String opr,
+            @Field("Product_id") int p_id,
+            @Field("User_id") int u_id,
+            @Field("Third_party_id") String th_id
+    );
+
+    @FormUrlEncoded
+    @POST("selectFromWishList.php")
+    Call<WishListResponse> get_wished_products(
+            @Field("opr") String opr,
+            @Field("user_id") int u_id
+    );
+
+    @FormUrlEncoded
+    @POST("selectFromWishList.php")
+    Call<WishListResponse> get_wished_productsTh(
+            @Field("opr") String opr,
+            @Field("third_party_id") String th_id
+    );
+
+    @FormUrlEncoded
+    @POST("selectFromWishList.php")
+    Call<Default_Response> delete_wished_products(
+            @Field("opr") String opr,
+            @Field("user_id") int u_id,
+            @Field("prd_id") int prd_id
+    );
+
+    @FormUrlEncoded
+    @POST("selectFromWishList.php")
+    Call<Default_Response> delete_wished_productsTh(
+            @Field("opr") String opr,
+            @Field("prd_id") int prd_id,
+            @Field("third_party_id") String th_id
     );
 
 }
