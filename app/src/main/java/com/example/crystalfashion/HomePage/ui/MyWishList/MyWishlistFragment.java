@@ -44,7 +44,7 @@ public class MyWishlistFragment extends Fragment {
     String ThID;
     RecyclerView recyclerView;
     List<WishListResponse.Product> productList;
-    private final int interval = 1000;
+    private final int interval = 2000;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class MyWishlistFragment extends Fragment {
 
         if(SharedPrefManager.getUser().uid==-1){
             ProgressDialog progressDialog=new ProgressDialog(getActivity());
-            progressDialog.setCanceledOnTouchOutside(true);
+            progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
             progressDialog.setMessage("Please Wait..");
             Handler handler = new Handler();
@@ -92,7 +92,7 @@ public class MyWishlistFragment extends Fragment {
         }
         else {
             ProgressDialog progressDialog=new ProgressDialog(getActivity());
-            progressDialog.setCanceledOnTouchOutside(true);
+            progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setProgressStyle(1);
             progressDialog.setMessage("Please Wait..");
             progressDialog.show();
