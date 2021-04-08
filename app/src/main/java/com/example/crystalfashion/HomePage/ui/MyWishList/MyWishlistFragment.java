@@ -1,18 +1,17 @@
 package com.example.crystalfashion.HomePage.ui.MyWishList;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,40 +41,61 @@ public class MyWishlistFragment extends Fragment {
     public MyWishlistFragment() {
     }
 
-    String ThID="0";
+    String ThID;
     RecyclerView recyclerView;
     List<WishListResponse.Product> productList;
+    private final int interval = 1000;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_mywishlist, container, false);
-        getThirdPartyID();
+
         recyclerView=root.findViewById(R.id.wishList_Recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+        getThirdPartyID();
 
-        if(!ThID.equals("0")){
-            Call<WishListResponse> wishListResponseCall = API_Client.getInstance().getApi().get_wished_productsTh("selectfavproductsTh",ThID);
-            wishListResponseCall.enqueue(new Callback<WishListResponse>() {
+        if(SharedPrefManager.getUser().uid==-1){
+            ProgressDialog progressDialog=new ProgressDialog(getActivity());
+            progressDialog.setCanceledOnTouchOutside(true);
+            progressDialog.show();
+            progressDialog.setMessage("Please Wait..");
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
                 @Override
-                public void onResponse(Call<WishListResponse> call, Response<WishListResponse> response) {
-                    WishListResponse wishListResponse=response.body();
-                    productList=wishListResponse.getProduct();
-                    if(productList.isEmpty()){
-                        Toast.makeText(getActivity(), "You Don't Have Any Favourites", Toast.LENGTH_SHORT).show();
-                        Intent gotoHome=new Intent(getActivity(), HomePage.class);
-                        startActivity(gotoHome);
-                    }else {
-                        recyclerView.setAdapter(new WishListAdatper(getActivity(), productList));
-                    }
-                }
+                public void run() {
+                    Call<WishListResponse> wishListResponseCall = API_Client.getInstance().getApi().get_wished_productsTh("selectfavproductsTh",ThID);
+                    wishListResponseCall.enqueue(new Callback<WishListResponse>() {
+                        @Override
+                        public void onResponse(Call<WishListResponse> call, Response<WishListResponse> response) {
+                            WishListResponse wishListResponse=response.body();
+                            productList=wishListResponse.getProduct();
+                            if(productList.isEmpty()){
+                                progressDialog.dismiss();
+                                Toast.makeText(getActivity(), "You Don't Have Any Favourites", Toast.LENGTH_SHORT).show();
+                                Intent gotoHome=new Intent(getActivity(), HomePage.class);
+                                startActivity(gotoHome);
+                            }else {
+                                progressDialog.dismiss();
+                                recyclerView.setAdapter(new WishListAdatper(getActivity(), productList));
+                            }
+                        }
 
-                @Override
-                public void onFailure(Call<WishListResponse> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<WishListResponse> call, Throwable t) {
 
+                        }
+                    });
                 }
-            });
+            };
+            handler.postDelayed(runnable,interval);
         }
         else {
+            ProgressDialog progressDialog=new ProgressDialog(getActivity());
+            progressDialog.setCanceledOnTouchOutside(true);
+            progressDialog.setProgressStyle(1);
+            progressDialog.setMessage("Please Wait..");
+            progressDialog.show();
             Call<WishListResponse> wishListResponseCall = API_Client.getInstance().getApi().get_wished_products("selectfavproducts", SharedPrefManager.getUser().uid);
             wishListResponseCall.enqueue(new Callback<WishListResponse>() {
                 @Override
@@ -83,10 +103,12 @@ public class MyWishlistFragment extends Fragment {
                     WishListResponse wishListResponse = response.body();
                     productList = wishListResponse.getProduct();
                     if(productList.isEmpty()){
+                        progressDialog.dismiss();
                         Toast.makeText(getActivity(), "You Don't Have Any Favourites", Toast.LENGTH_SHORT).show();
                         Intent gotoHome=new Intent(getActivity(), HomePage.class);
                         startActivity(gotoHome);
                     }else {
+                        progressDialog.dismiss();
                         recyclerView.setAdapter(new WishListAdatper(getActivity(), productList));
                     }
                 }
@@ -100,7 +122,7 @@ public class MyWishlistFragment extends Fragment {
         return root;
     }
 
-    private void getThirdPartyID() {
+    private  void getThirdPartyID() {
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -111,6 +133,7 @@ public class MyWishlistFragment extends Fragment {
                         // Application code
                         try {
                             ThID = object.getString("id");
+                            Log.d("Faceook Id:",ThID);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

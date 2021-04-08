@@ -1,6 +1,7 @@
 package com.example.crystalfashion.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.crystalfashion.API_Client.API_Client;
 import com.example.crystalfashion.API_Interface.API;
+import com.example.crystalfashion.HomePage.HomePage;
 import com.example.crystalfashion.Models.Default_Response;
 import com.example.crystalfashion.Models.ProductResponse;
 import com.example.crystalfashion.Models.WishListResponse;
@@ -87,6 +89,10 @@ public class WishListAdatper extends RecyclerView.Adapter<WishListAdatper.WishLi
                                 Toast.makeText(mCtx, product_response.getProduct_caption() + " Removed", Toast.LENGTH_SHORT).show();
                                 productList.remove(holder.getAdapterPosition());
                                 notifyItemRemoved(holder.getAdapterPosition());
+                                if(productList.isEmpty()){
+                                    Intent GotoHome=new Intent(mCtx, HomePage.class);
+                                    mCtx.startActivity(GotoHome);
+                                }
                             }
 
                             @Override
@@ -103,6 +109,10 @@ public class WishListAdatper extends RecyclerView.Adapter<WishListAdatper.WishLi
                                 Toast.makeText(mCtx, product_response.getProduct_caption() + " Removed", Toast.LENGTH_SHORT).show();
                                 productList.remove(holder.getAdapterPosition());
                                 notifyItemRemoved(holder.getAdapterPosition());
+                                if(productList.isEmpty()){
+                                    Intent GotoHome=new Intent(mCtx, HomePage.class);
+                                    mCtx.startActivity(GotoHome);
+                                }
                             }
 
                             @Override
