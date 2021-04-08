@@ -93,7 +93,6 @@ public class MyWishlistFragment extends Fragment {
         else {
             ProgressDialog progressDialog=new ProgressDialog(getActivity());
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setProgressStyle(1);
             progressDialog.setMessage("Please Wait..");
             progressDialog.show();
             Call<WishListResponse> wishListResponseCall = API_Client.getInstance().getApi().get_wished_products("selectfavproducts", SharedPrefManager.getUser().uid);
