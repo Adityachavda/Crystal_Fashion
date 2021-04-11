@@ -3,7 +3,7 @@
     package="com.example.crystalfashion">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CrystalFashion">
+        <activity android:name=".ProductDetails.productActivity"
+            android:theme="@style/Theme.AppCompat.Light.AppBar"/>
         <activity
             android:name=".Register.Register"
-            android:theme="@style/Theme.Design.Light.NoActionBar">
-
-        </activity>
+            android:theme="@style/Theme.Design.Light.NoActionBar"/>
         <activity
             android:name=".HomePage.HomePage"
             android:label="@string/title_activity_home_page"

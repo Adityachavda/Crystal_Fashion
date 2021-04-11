@@ -38,20 +38,22 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     private Context mCtx;
     private List<ProductResponse.Product> productList;
+    private OnProductClickListener moOnProductClickListener;
     private String URL = "https://incomparable-vector.000webhostapp.com/Crystal_Fashion/";
     int UserId;
     String ThID = "0";
 
-    public ProductsAdapter(Context mCtx, List<ProductResponse.Product> productList) {
+    public ProductsAdapter(Context mCtx, List<ProductResponse.Product> productList, OnProductClickListener moOnProductClickListener) {
         this.mCtx = mCtx;
         this.productList = productList;
+        this.moOnProductClickListener = moOnProductClickListener;
     }
 
     @NonNull
     @Override
     public ProductsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mCtx).inflate(R.layout.homepage_recycler_view_layout, parent, false);
-        return new ProductsViewHolder(view);
+        return new ProductsViewHolder(view, moOnProductClickListener);
     }
 
     @Override
@@ -149,12 +151,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         return productList.size();
     }
 
-    public class ProductsViewHolder extends RecyclerView.ViewHolder {
+    public class ProductsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView product_name, product_caption, product_price;
         ImageView product_image;
         CheckBox whishList_cheCheckBox;
+        OnProductClickListener onProductClickListener;
 
-        public ProductsViewHolder(@NonNull View itemView) {
+        public ProductsViewHolder(@NonNull View itemView, OnProductClickListener moOnProductClickListener1) {
             super(itemView);
 
             product_image = itemView.findViewById(R.id.product_ImageView);
@@ -163,6 +166,31 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             product_price = itemView.findViewById(R.id.Product_Price_textView);
             whishList_cheCheckBox = itemView.findViewById(R.id.Product_WishList);
 
+            this.onProductClickListener = moOnProductClickListener1;
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            ProductResponse.Product product_response = productList.get(getAdapterPosition());
+            int P_id = product_response.getProduct_id();
+            String Prd_image = product_response.getProduct_image();
+            String Prd_name = product_response.getProduct_name();
+            int Prd_price = product_response.getProduct_price();
+            String Prd_Details = product_response.getProduct_detail();
+            String Prd_caption = product_response.getProduct_caption();
+            String Prd_category = product_response.getProduct_category();
+            String Prd_material = product_response.getProduct_material();
+            String Prd_size = product_response.getProduct_size();
+            String Prd_care = product_response.getProduct_care();
+            String Prd_fit = product_response.getProduct_fit();
+            onProductClickListener.onProductClick(getAdapterPosition(), P_id, Prd_image, Prd_name, Prd_price, Prd_Details, Prd_category, Prd_caption, Prd_material, Prd_size, Prd_care, Prd_fit);
         }
     }
+
+    public interface OnProductClickListener {
+        void onProductClick(Integer position, int p_id, String prd_image, String prd_name, int prd_price, String prd_details, String prd_category, String prd_caption, String prd_material, String prd_size, String prd_care, String prd_fit);
+    }
+
 }
